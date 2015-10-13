@@ -48,7 +48,7 @@ URL <- "http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_ZONNEP
 x <- getURL(URL)
 x = read.csv(file=url)
 download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_ZONNEPANELEN",destfile="Data/CSV/SolarPanels.csv",method="libcurl")
-SolarPanels <- "Data/CSV/SolarPanels.csv"
+SolarPanels <- "Data/CSV/SolarPanels.csv" 
 
 #Download Building Energy Labels
 URL <- "http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_LABELS"
@@ -74,13 +74,17 @@ CityDistricts <- "Data/CSV/CityDistricts.csv"
 ## ESRI .SHP-files (UNZIP FIRST!!)
 ## - Solar energy potential map
 ## - Neighborhood borders (Neighborhoods, Neighborhood combinations)
+## - Noise nuisance
+## - Building function map
 
 #Download Solar Potential Map
 download.file("http://maps.amsterdam.nl/energie_zonwind/ENERGIE_ZONPOTENTIE.ZIP", destfile = "Data/Shapefiles/SolarPotential.zip", method="libcurl")
+#Download Neighborhood borders (Neighborhoods, Neighborhood combinations)
+download.file("http://maps.amsterdam.nl/gebiedsindeling/GEBIEDSINDELINGEN.ZIP",destfile="Data/Shapefiles/NeighborhoodBorders.zip",method="libcurl")
+#Download Noise nuisance map
+download.file("http://maps.amsterdam.nl/geluid/GELUID.ZIP", destfile = "Data/Shapefiles/NoiseNuisance.zip",method="libcurl")
+#Download Amsterdam's building function map
+download.file("http://maps.amsterdam.nl/functiekaart/FUNCTIEKAART.ZIP", destfile = "Data/Shapefiles/FunctionMap.zip", method = "libcurl")
 
-#Download Area borders (Neighborhoods, Neighborhoodcombinations, Areas, City Districts)
-# URL <- "http://maps.amsterdam.nl/gebiedsindeling/GEBIEDSINDELINGEN.ZIP"
-# x <- getURL(URL)
-# x = read.csv(file=url)
-### Unpack and rename different files ### download.file("http://maps.amsterdam.nl/gebiedsindeling/GEBIEDSINDELINGEN.ZIP",destfile="Data/SolarPotential.shp",method="libcurl")
-# CityDistricts <- "Data/CityDistricts.shp"
+
+
