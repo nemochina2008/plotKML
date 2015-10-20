@@ -1,5 +1,7 @@
 #Daniel Scheerooren
-#13-10-15
+#Date: 20-10-2015
+#Google Vis options
+
 ###Help pages:
 ##https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html 
 ##http://www.inside-r.org/packages/cran/googleVis/docs/gvisAnnotatedTimeLine
@@ -33,9 +35,20 @@ plot(CP_TestTimeSlider2_copy$Latitude ~ CP_TestTimeSlider2_copy$Longitude, ylab=
 
 #Make date variable understandable for R
 CP_TestTimeSlider2_copy$Date <- as.Date(CP_TestTimeSlider2_copy$Date, "%d-%m-%y")
+# Or create date variable, using: rDate <- as.Date(CP_TestTimeSlider2_copy$Date, "%d-%m-%y")
 
 #Plot kwH vs. Date
 plot(CP_TestTimeSlider2_copy$kWh~rDate, type='h', col='red', ylab="kWh", xlab="Date", main="Charge sessions")
+# also possible with type=
+# "p" for points,
+# "l" for lines,
+# "b" for both,
+# "c" for the lines part alone of "b",
+# "o" for both ‘overplotted’,
+# "h" for ‘histogram’ like (or ‘high-density’) vertical lines,
+# "s" for stair steps,
+# "S" for other steps, see ‘Details’ below,
+# "n" for no plotting.
 
 ### Google VIS
 install.packages("googleVis")
@@ -63,16 +76,25 @@ Cal <- gvisCalendar(CP_TestTimeSlider2_copy,
                       cellSize: 10,
                       cellColor: { stroke: 'red', strokeOpacity: 0.2 },
                       focusedCellColor: {stroke:'red'}}")
-                    )
+)
 plot(Cal)
 
 #Merging different charts! 
 GeoCal <- gvisMerge(Geo, Cal, horizontal = TRUE)
 plot(GeoCal)
-  
-#Read KML files
-newmap<-readOGR("M:/GeoDataMscThesis/MscGeoKML/ChargeStationsAmsterdam.kml", layer="ChargeStationsAmsterdam")
-plot(newmap)
 
+#Create Annotated Timeline
+Timeline <- gvisAnnotatedTimeLine(CP_TestTimeSlider2_copy, datevar="Date", numvar="kWh", idvar="ID", titlevar="kWh", annotationvar = "", date.format="%d-%m-%y", options=list(gvis.language="nl"))
+plot(Timeline)
 
-                
+#Create intensity map
+Intense <- gvisIntensityMap(CP_TestTimeSlider2_copy, locationvar="LatLong", numvar='kWh', options=list(dataMode = "markers"))
+plot(Intense)
+
+#Create histogram
+Hist <- gvisHistogram(CP_TestTimeSlider2_copy, options=list(
+  legend="{ position: 'top', maxLines: 2 }",
+  colors="['#5C3292', '#1A8763', '#871B47']",
+  width=400, height=360))
+plot(Hist)
+
