@@ -15,61 +15,40 @@ library(memisc)
 ## - Municipal election results 2014
 ## - City district borders
 
+setwd("M:/GeoDataMscThesis/Data/CSV")
+
 #Download Charge point dataset
-URL <- "https://api.essent.nl/generic/downloadChargingStations?latitude_low=52.30567123031878&longtitude_low=4.756801078125022&latitude_high=52.43772606594848&longtitude_high=5.086390921875022&format=CSV"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("https://api.essent.nl/generic/downloadChargingStations?latitude_low=52.30567123031878&longtitude_low=4.756801078125022&latitude_high=52.43772606594848&longtitude_high=5.086390921875022&format=CSV",destfile="Data/CSV/ChargeStations.csv",method="libcurl")
-ChargeStations<- "Data/CSV/ChargeStations.csv"
+download.file("https://api.essent.nl/generic/downloadChargingStations?latitude_low=52.30567123031878&longtitude_low=4.756801078125022&latitude_high=52.43772606594848&longtitude_high=5.086390921875022&format=CSV",destfile="ChargeStations.csv",method="libcurl")
+ChargeStations <- read.csv("ChargeStations.csv", header = T, sep=";")
+View(ChargeStations)
 
 #Download Improvement locations air quality
-URL <- "https://kaart.amsterdam.nl/datasets/datasets-item/t/verbeterlocaties-luchtkwaliteit-1/export/csv"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/verbeterlocaties-luchtkwaliteit-1/export/csv",destfile="Data/CSV/ImprovementZonesAirQuality.csv",method="libcurl")
-AirImprovementZones <- "Data/CSV/ImprovementZonesAirQuality.csv"
+download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/verbeterlocaties-luchtkwaliteit-1/export/csv",destfile="ImprovementZonesAirQuality.csv",method="libcurl")
+AirImprovementZones <- read.csv("ImprovementZonesAirQuality.csv", header = T, sep = ",")
 
 #Download Air quality measurement stations
-URL <- "https://kaart.amsterdam.nl/datasets/datasets-item/t/lucht-meetstations-1/export/csv"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/lucht-meetstations-1/export/csv",destfile="Data/CSV/AirQualityStations.csv",method="libcurl")
-AirQualityStations <- "Data/CSV/AirQualityStations.csv"
+download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/lucht-meetstations-1/export/csv",destfile="AirQualityStations.csv",method="libcurl")
+AirQualityStations <- read.csv("AirQualityStations.csv", header = T, sep = ",")
 
 #Download Payed Parking Zones
-URL <- "https://kaart.amsterdam.nl/datasets/datasets-item/t/parkeertariefgebieden-2015/export/csv"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/parkeertariefgebieden-2015/export/csv",destfile="Data/CSV/PayedParkingZones.csv",method="libcurl")
-PayedParkingZones <- "Data/CSV/PayedParkingZones.csv"
+download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/parkeertariefgebieden-2015/export/csv",destfile="PayedParkingZones.csv",method="libcurl")
+PayedParkingZones <- read.csv("PayedParkingZones.csv", header = T, sep = ",")
 
 #Download Existing Solar Panels
-URL <- "http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_ZONNEPANELEN"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_ZONNEPANELEN",destfile="Data/CSV/SolarPanels.csv",method="libcurl")
-SolarPanels <- "Data/CSV/SolarPanels.csv" 
+download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_ZONNEPANELEN",destfile="SolarPanels.csv",method="libcurl")
+SolarPanels <- read.csv("SolarPanels.csv", header = T, sep = ",")
 
 #Download Building Energy Labels
-URL <- "http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_LABELS"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_LABELS",destfile="Data/CSV/EnergyLabels.csv",method="libcurl")
-EnergyLabels <- "Data/CSV/EnergyLabels.csv"
+download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=ENERGIE_LABELS",destfile="EnergyLabels.csv",method="libcurl")
+EnergyLabels <- read.csv("EnergyLabels.csv", header = T, sep = ",")
 
 #Download Municipal Election Results 2014
-URL <- "http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=STEMBUS2014_GR"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=STEMBUS2014_GR",destfile="Data/CSV/ElectionResults2014.csv",method="libcurl")
-Election2014 <- "Data/CSV/ElectionResults2014.csv"
+download.file("http://maps.amsterdam.nl/open_geodata/excel.php?KAARTLAAG=STEMBUS2014_GR",destfile="ElectionResults2014.csv",method="libcurl")
+Election2014 <- read.csv("ElectionResults2014.csv", header = T, sep = ",")
 
 #Download City District Borders
-URL <- "https://kaart.amsterdam.nl/datasets/datasets-item/t/stadsdeelgrenzen-1/export/csv"
-x <- getURL(URL)
-x = read.csv(file=url)
-download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/stadsdeelgrenzen-1/export/csv",destfile="Data/CSV/CityDistricts.csv",method="libcurl")
-CityDistricts <- "Data/CSV/CityDistricts.csv"
+download.file("https://kaart.amsterdam.nl/datasets/datasets-item/t/stadsdeelgrenzen-1/export/csv",destfile="CityDistricts.csv",method="libcurl")
+CityDistricts <- read.csv("CityDistricts.csv", header = T, sep = ",")
 
 ## ESRI .SHP-files (UNZIP FIRST!!)
 ## - Solar energy potential map
@@ -78,7 +57,24 @@ CityDistricts <- "Data/CSV/CityDistricts.csv"
 ## - Building function map
 
 #Download Solar Potential Map
-download.file("http://maps.amsterdam.nl/energie_zonwind/ENERGIE_ZONPOTENTIE.ZIP", destfile = "Data/Shapefiles/SolarPotential.zip", method="libcurl")
+download.file("http://maps.amsterdam.nl/energie_zonwind/ENERGIE_ZONPOTENTIE.ZIP", destfile = "SolarPotential.zip", method = "libcurl")
+SolarPotential <- unzip("SolarPotential.zip", overwrite = TRUE, junkpaths = TRUE, exdir = tmpd)
+
+url <- "http://maps.amsterdam.nl/energie_zonwind/ENERGIE_ZONPOTENTIE.ZIP"
+tmpd <- tempdir() # tmpd <- "M:/GeoDataMscThesis/" --> Error: 'exdir' does not exist
+tmpz <- file.path(tmpd, basename(url))
+download.file(url, tmpz, mode = "wb")
+unzip(tmpz, overwrite = TRUE, junkpaths = TRUE, exdir = tmpd)
+
+list.files(tmpd)
+
+# basename(url)
+# tmpz <- file.path("Data/Shapefiles", basename(url))
+# download.file(url, file.path("Data/Shapefiles", basename(url)))
+# unzip(tmpz, overwrite = TRUE, junkpaths = TRUE, exdir = )
+
+#destfile="Data/Shapefiles/ENERGIE_ZONPOTENTIE.zip", method="libcurl")
+
 #Download Neighborhood borders (Neighborhoods, Neighborhood combinations)
 download.file("http://maps.amsterdam.nl/gebiedsindeling/GEBIEDSINDELINGEN.ZIP",destfile="Data/Shapefiles/NeighborhoodBorders.zip",method="libcurl")
 #Download Noise nuisance map
