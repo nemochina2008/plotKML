@@ -29,37 +29,44 @@ EssentRaw <- rbind(EssentRaw01, EssentRaw06)
 download.file("https://api.essent.nl/generic/downloadChargingStations?latitude_low=52.30567123031878&longtitude_low=4.756801078125022&latitude_high=52.43772606594848&longtitude_high=5.086390921875022&format=CSV",destfile="ChargeStations.csv",method="libcurl")
 ChargeStations = read.csv("ChargeStations.csv", header = T, sep=";")
 
-# Rename column by name: (for merge purposes)
-names(NuonRaw)[names(NuonRaw)=="Straat"] <- "Street"
-names(NuonRaw)[names(NuonRaw)=="Huisnummer"] <- "HouseNumber"
-names(NuonRaw)[names(NuonRaw)=="Postcode"] <- "PostalCode"
-names(NuonRaw)[names(NuonRaw)=="Start"] <- "BEGIN_LOAD_TIME"
-names(NuonRaw)[names(NuonRaw)=="Eind"] <- "END_LOAD_TIME"
-names(NuonRaw)[names(NuonRaw)=="Laadtijd"] <- "CHARGETIME"
-names(EssentRaw)[names(EssentRaw)=="STREET"] <- "Street"
-names(EssentRaw)[names(EssentRaw)=="HOUSE_NUM1"] <- "HouseNumber"
-names(EssentRaw)[names(EssentRaw)=="POST_CODE1"] <- "PostalCode"
-names(EssentRaw)[names(EssentRaw)=="ENERGIE"] <- "kWh"
-
 View(NuonRaw)
 View(EssentRaw)
 View(ChargeStations)
 
-### DATA GELIJK MAKEN! DATUM/TIJD/POSTCODE/kWH notering
-space = NuonRaw$PostalCode
-gsub("([0-9])([A-Z])", "\\1 \\2", space) #Plaatst een spatie tussen cijfers en letters, maar niet in NuonRaw. Why?!
+### Make Nuon/Essent data equal (date/time/PostalCode/kWH)
+#Place space between numbers and letter PostalCode
+NuonRaw$PostalCode <- gsub("([0-9])([A-Z])", "\\1 \\2", space) 
+#Convert text to date 
+NuonRaw$Start <- as.POSIXct(NuonRaw$Start, tz = "GMT") #Zet ingelezen datum om naar datum/tijd notering, maar niet de juiste!
+NuonRaw$Eind <- as.POSIXct(NuonRaw$Eind, tz = "GMT")
+#Create 4 empty columns in R
+NuonRaw$BEGIN_LOAD_DATE <- NA
+NuonRaw$BEGIN_LOAD_TIME <- NA
+NuonRaw$END_LOAD_DATE <- NA
+NuonRaw$END_LOAD_TIME <- NA
+#Split date and time and assign to column
+NuonRaw$BEGIN_LOAD_DATE <- sapply(strsplit(as.character(NuonRaw$Start), " "), "[", 1) #Creates an object, but not a column in the data sheet.
+NuonRaw$BEGIN_LOAD_TIME <- sapply(strsplit(as.character(NuonRaw$Start), " "), "[", 2)
+NuonRaw$END_LOAD_DATE <- sapply(strsplit(as.character(NuonRaw$Eind), " "), "[", 1)
+NuonRaw$END_LOAD_TIME <- sapply(strsplit(as.character(NuonRaw$Eind), " "), "[", 2)
 
-
+# Rename column by name: (for merge purposes)
+names(NuonRaw)[names(NuonRaw)=="Straat"] <- "Street"
+names(NuonRaw)[names(NuonRaw)=="Huisnummer"] <- "HouseNumber"
+names(NuonRaw)[names(NuonRaw)=="Laadtijd"] <- "CONNECT_TIME"
+names(EssentRaw)[names(EssentRaw)=="STREET"] <- "Street"
+names(EssentRaw)[names(EssentRaw)=="HOUSE_NUM1"] <- "HouseNumber"
+names(EssentRaw)[names(EssentRaw)=="ENERGIE"] <- "kWh"
+names(EssentRaw)[names(EssentRaw)=="CHARGE_DURATION"] <- "CONNECT_TIME"
 
 # Add xy-coordinates of charge point dataset to charge datasets
-nuonXYmerged <- merge(NuonRaw,ChargeStations,by=c("Street","HouseNumber", "PostalCode"))
-essentXYmerged <- merge(EssentRaw,ChargeStations, by=c("Street","HouseNumber", "PostalCode"))
+nuonXYmerged <- merge(NuonRaw,ChargeStations,by=c("Street","HouseNumber"))
+essentXYmerged <- merge(EssentRaw,ChargeStations, by=c("Street","HouseNumber"))
 
 # Remove unnecessary columns
-Essentkeep <- c("Street", "HouseNumber", "PostalCode", "BEGIN_LOAD_DATE", "END_LOAD_DATE", "BEGIN_LOAD_TIME", "END_LOAD_TIME", "CHARGETIME", "CHARGE_DURATION", "METER_READ_BEGIN", "METER_READ_END", "ENERGIE", "Latitude", "Longitude", "Provider")
-EssentClean <- essentXYmerged[Essentkeep]
-Nuonkeep <- c("Street", "HouseNumber", "PostalCode", "Start", "Eind", "Laadtijd", "kWh", "Latitude", "Longitude", "Provider")
-NuonClean <- nuonXYmerged[Nuonkeep]
+keep <- c("Street", "HouseNumber", "PostalCode", "BEGIN_LOAD_DATE", "END_LOAD_DATE", "BEGIN_LOAD_TIME", "END_LOAD_TIME", "CONNECT_TIME", "kWh", "Latitude", "Longitude", "Provider")
+EssentClean <- essentXYmerged[keep]
+NuonClean <- nuonXYmerged[keep]
 
 #Write object to csv file for viewing outside R environment
 write.csv(EssentClean, file = "M:/GeoDataMscThesis/HvA_Copy_RawData/EssentClean.csv")
